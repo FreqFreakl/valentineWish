@@ -497,7 +497,7 @@
 		}
 	</style>
 </head>
-<body>
+<body style="display:none;">
 	<div class="floating-hearts" aria-hidden="true">
 		<span style="left: 8%; animation-delay: 0s;">💗</span>
 		<span style="left: 18%; animation-delay: 2s;">💞</span>
@@ -542,12 +542,12 @@
 					<button id="musicToggle" type="button">Play Music 🎵</button>
 					<span>Background music (muted by default)</span>
 				</div>
-				<audio
-					id="bgMusic"
-					src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-					muted
-					loop
-				></audio>
+				   <audio autoplay
+					   id="bgMusic"
+					   src="bgm.webm"
+					   loop
+					   preload="auto"
+				   ></audio>
 			</div>
 		</div>
 	</section>
@@ -602,16 +602,7 @@
 	<section class="quotes" id="quotes">
 		<h2 class="section-title">Love Quotes</h2>
 		<p class="section-subtitle">Five poetic lines to keep the mood tender and refined.</p>
-		<img
-			class="sticker one"
-			src="https://via.placeholder.com/120x120.png?text=Duddu+%26+Buddu"
-			alt="Duddu and Buddu sticker placeholder"
-		/>
-		<img
-			class="sticker two"
-			src="https://via.placeholder.com/120x120.png?text=Love+Sticker"
-			alt="Cute love sticker placeholder"
-		/>
+       
 		<div class="quotes-grid">
 			<div class="quote-card">
 				<p>“In your smile, I find my favorite sunrise; in your heart, I find my home.”</p>
@@ -658,39 +649,77 @@
 		Made with soft hearts and warm light. Happy Valentine’s Day 💖🌹
 	</footer>
 
-	<script>
-		const surpriseBtn = document.getElementById("surpriseBtn");
-		const hiddenMessage = document.getElementById("hiddenMessage");
-		const musicToggle = document.getElementById("musicToggle");
-		const bgMusic = document.getElementById("bgMusic");
+	   <script>
+		   const surpriseBtn = document.getElementById("surpriseBtn");
+		   const hiddenMessage = document.getElementById("hiddenMessage");
+		   const musicToggle = document.getElementById("musicToggle");
+		   const bgMusic = document.getElementById("bgMusic");
 
-		surpriseBtn.addEventListener("click", () => {
-			const isVisible = hiddenMessage.style.display === "block";
-			hiddenMessage.style.display = isVisible ? "none" : "block";
-			surpriseBtn.textContent = isVisible ? "Click for Surprise ✨" : "Hide Surprise 💫";
-		});
+		   // Preload all gallery images before showing the page
+		   const imageSources = [
+			   "image1.jpeg",
+			   "image2.jpeg",
+			   "image3.jpeg",
+			   "image4.jpeg",
+			   "image5.jpeg",
+			   "image6.jpeg",
+			   "image7.jpeg",
+			   "image8.jpeg",
+			   "image9.jpeg",
+			   "image10.jpeg",
+			   "image0.jpeg"
+		   ];
+		   let loadedCount = 0;
+		   function showPageWhenReady() {
+			   loadedCount++;
+               bgMusic.muted = false;
+               const playPromise = bgMusic.play()
+			   if (loadedCount === imageSources.length) {
+				   document.body.style.display = '';
+				   // Try to autoplay music after images are loaded
+				   bgMusic.muted = false;
+				   const playPromise = bgMusic.play();
+				   if (playPromise !== undefined) {
+					   playPromise.catch(() => {
+						   // Autoplay might be blocked, do nothing
+					   });
+				   }
+			   }
+		   }
+		   imageSources.forEach(src => {
+			   const img = new window.Image();
+			   img.onload = showPageWhenReady;
+			   img.onerror = showPageWhenReady;
+			   img.src = src;
+		   });
 
-		musicToggle.addEventListener("click", () => {
-			if (bgMusic.paused) {
-				bgMusic.muted = false;
-				bgMusic.play();
-				musicToggle.textContent = "Pause Music 🎵";
-			} else {
-				bgMusic.pause();
-				musicToggle.textContent = "Play Music 🎵";
-			}
-		});
+		   surpriseBtn.addEventListener("click", () => {
+			   const isVisible = hiddenMessage.style.display === "block";
+			   hiddenMessage.style.display = isVisible ? "none" : "block";
+			   surpriseBtn.textContent = isVisible ? "Click for Surprise ✨" : "Hide Surprise 💫";
+		   });
 
-		document.addEventListener("click", (event) => {
-			if (event.target.closest("button")) return;
-			const heart = document.createElement("div");
-			heart.className = "heart-burst";
-			heart.textContent = "💖";
-			heart.style.left = `${event.clientX}px`;
-			heart.style.top = `${event.clientY}px`;
-			document.body.appendChild(heart);
-			setTimeout(() => heart.remove(), 1400);
-		});
-	</script>
+		   musicToggle.addEventListener("click", () => {
+			   if (bgMusic.paused) {
+				   bgMusic.muted = false;
+				   bgMusic.play();
+				   musicToggle.textContent = "Pause Music 🎵";
+			   } else {
+				   bgMusic.pause();
+				   musicToggle.textContent = "Play Music 🎵";
+			   }
+		   });
+
+		   document.addEventListener("click", (event) => {
+			   if (event.target.closest("button")) return;
+			   const heart = document.createElement("div");
+			   heart.className = "heart-burst";
+			   heart.textContent = "💖";
+			   heart.style.left = `${event.clientX}px`;
+			   heart.style.top = `${event.clientY}px`;
+			   document.body.appendChild(heart);
+			   setTimeout(() => heart.remove(), 1400);
+		   });
+	   </script>
 </body>
 </html>
